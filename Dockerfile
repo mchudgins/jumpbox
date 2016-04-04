@@ -15,7 +15,7 @@ RUN groupadd --gid 1001 jumper \
 	&& apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y --no-install-recommends ca-certificates curl dnsutils gettext git \
-		mysql-client nano python tar unzip \
+		mysql-client nano python tar unzip vi \
 	&& apt-get clean \
 	&& curl -s "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \
 	&& unzip awscli-bundle.zip \
@@ -36,3 +36,4 @@ USER 1001
 ENV HOME /work
 
 ADD setenv.sh /work/setenv.sh
+RUN chmod -R ugo+rwx /work
