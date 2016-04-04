@@ -22,9 +22,9 @@ RUN groupadd --gid 1001 jumper \
 	&& ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
 	&& rm awscli-bundle.zip \
 	&& rm -rf awscli-bundle \
-	&& curl -L https://github.com/openshift/origin/releases/download/v${OPENSHIFT_VERSION}/openshift-origin-client-tools-v${OPENSHIFT_VERSION}-3941102-linux-64bit.tar.gz -o oso.tar.gz \
+	&& curl -L https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-linux-64bit.tar.gz -o oso.tar.gz \
 	&& tar xvfz oso.tar.gz \
-	&& mv openshift-origin-client-tools-v${OPENSHIFT_VERSION}-3941102-linux-64bit/oc /usr/local/bin \
+	&& mv openshift-origin-client-tools-v1.1.4-3941102-linux-64bit/oc /usr/local/bin \
 	&& rm -rf openshift-origin-client-tools-v1.1.4-3941102-linux-64bit \
 	&& mkdir /work \
 	&& chmod ugo+rwx /work \
