@@ -3,10 +3,11 @@
 Provides a "jumpbox" image for Openshift containing:
 
 * bash
+* curl
 * source code control: git
 * dns utilities: nslookup and dig
-* nano and vi
-* python
+* text editors: nano and vi
+* scripting: python
 * aws cli
 * mysql
 * Openshift cli
