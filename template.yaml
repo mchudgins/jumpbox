@@ -4,7 +4,7 @@ metadata:
   name: jumpbox
   annotations:
     description: Jumpbox for testing within Openshift
-    iconClass: icon-jboss
+    iconClass: icon-shadowman
     tags: jumpbox
 objects:
 - apiVersion: v1
