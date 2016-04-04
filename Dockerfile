@@ -31,9 +31,10 @@ RUN groupadd --gid 1001 jumper \
 	&& rm oso.tar.gz
 
 
-USER 1001
-
 ENV HOME /work
 
 ADD setenv.sh /work/setenv.sh
 RUN chmod -R ugo+rwx /work
+
+USER 1001
+
