@@ -1,0 +1,34 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "jumpbox" 
+spec:
+  triggers: 
+    -
+      type: "GitHub"
+      github:
+        secret: "secret101"
+    -
+      type: "Generic"
+      generic:
+        secret: "secret101"
+    -
+      type: "ImageChange"
+  source: 
+    type: "Git"
+    git:
+      uri: "https://github.com/mchudgins/jumpbox.git"
+    source: ""
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: "ImageStreamTag"
+        namespace: "openshift"
+        name: "debian:latest"
+
+  output: 
+    to:
+      kind: "ImageStreamTag"
+      name: "jumpbox:latest"
+
