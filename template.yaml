@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: jumpbox
+  annotations:
+    description: Jumpbox for testing within Openshift
+    iconClass: icon-jboss
+    tags: jumpbox
+objects:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      openshift.io/scc: restricted
+    name: jumpbox
+  spec:
+    containers:
+    - command:
+      - /bin/sh
+      - -c
+      - while /bin/true; do sleep 60; done
+      env:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: PUBLIC_URL
+        value: http://gitserver.$(POD_NAMESPACE):$(SERVICE_PORT)
+      image: 172.30.250.243:5000/openshift/jumpbox
+      imagePullPolicy: Always
+      name: jumpbox
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+      terminationMessagePath: /dev/termination-log
+    dnsPolicy: ClusterFirst
+    restartPolicy: Never
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
