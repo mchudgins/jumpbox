@@ -36,8 +36,8 @@ ENV HOME /work
 ADD setenv.sh /work/setenv.sh
 RUN chmod -R ugo+rwx /work
 
-COPY bashrc /.bashrc
-COPY bash_aliases /.bash_aliases
+COPY bashrc /work/.bashrc
+COPY bash_aliases /work/.bash_aliases
 
 USER 1001
 
