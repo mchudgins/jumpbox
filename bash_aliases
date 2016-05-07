@@ -1,0 +1,5 @@
+alias ll='ls -l'
+alias dir='ls -l'
+alias cls='clear'
+alias df='/bin/df --si'
+alias kctl='~/opt/kubernetes/cluster/kubectl.sh'
