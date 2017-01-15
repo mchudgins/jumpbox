@@ -3,7 +3,7 @@
 # troubleshooting applications/services on Openshift
 #
 
-FROM		debian:latest
+FROM		debian:testing
 MAINTAINER	Mike Hudgins <mchudgins@dstsystems.com> @mchudgins
 
 LABEL io.k8s.description="An application troubleshooting jumpbox" \
@@ -15,29 +15,38 @@ RUN groupadd --gid 1001 jumper \
 	&& apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y --no-install-recommends ca-certificates curl dnsutils gettext git \
-		mysql-client nano python tar unzip vim-tiny \
+		libnss-wrapper mysql-client nano python tar unzip vim-tiny \
 	&& apt-get clean \
 	&& curl -s "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \
 	&& unzip awscli-bundle.zip \
 	&& ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
 	&& rm awscli-bundle.zip \
 	&& rm -rf awscli-bundle \
-	&& curl -L https://github.com/openshift/origin/releases/download/v1.1.4/openshift-origin-client-tools-v1.1.4-3941102-linux-64bit.tar.gz -o oso.tar.gz \
+	&& curl -L https://github.com/openshift/origin/releases/download/v1.3.2/openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit.tar.gz -o oso.tar.gz \
 	&& tar xvfz oso.tar.gz \
-	&& mv openshift-origin-client-tools-v1.1.4-3941102-linux-64bit/oc /usr/local/bin \
-	&& rm -rf openshift-origin-client-tools-v1.1.4-3941102-linux-64bit \
+	&& mv openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit/oc /usr/local/bin \
+	&& rm -rf openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit \
 	&& mkdir /work \
 	&& chmod ugo+rwx /work \
-	&& rm oso.tar.gz
+	&& rm oso.tar.gz \
+	&& cp /etc/passwd /etc/nss-passwd && cp /etc/group /etc/nss-group
 
 
-ENV HOME /work
-
-ADD setenv.sh /work/setenv.sh
-RUN chmod -R ugo+rwx /work
-
+ADD setenv.sh /work/.shinit
 COPY bashrc /work/.bashrc
 COPY bash_aliases /work/.bash_aliases
+RUN chmod -R ugo+rwx /work
 
+COPY passwd.template /usr/local/etc/passwd.template
+COPY group.template /usr/local/etc/group.template
+COPY bash.bashrc /etc/bash.bashrc
+COPY nss_wrapper.sh /etc/profile.d/nss_wrapper.sh
+
+# USER only works in Docker, not in Openshift
 USER 1001
+
+ENV HOME /work
+ENV ENV=$HOME/.shinit;
+ENV LD_PRELOAD libnss_wrapper.so
+ENV USER jumper
 
