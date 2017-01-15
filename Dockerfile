@@ -49,4 +49,4 @@ ENV HOME /work
 ENV ENV=$HOME/.shinit;
 ENV LD_PRELOAD libnss_wrapper.so
 ENV USER jumper
-
+ENV LOGNAME jumper
