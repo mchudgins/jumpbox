@@ -3,7 +3,8 @@
 # troubleshooting applications/services on Openshift
 #
 
-FROM		debian:testing
+#FROM		debian:testing
+FROM		ubuntu:18.04
 MAINTAINER	Mike Hudgins <mchudgins@dstsystems.com> @mchudgins
 
 LABEL io.k8s.description="An application troubleshooting jumpbox" \
@@ -22,13 +23,15 @@ RUN groupadd --gid 1001 jumper \
 	&& ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
 	&& rm awscli-bundle.zip \
 	&& rm -rf awscli-bundle \
-	&& curl -L https://github.com/openshift/origin/releases/download/v1.3.2/openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit.tar.gz -o oso.tar.gz \
+	&& curl -L https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz -o oso.tar.gz \
 	&& tar xvfz oso.tar.gz \
-	&& mv openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit/oc /usr/local/bin \
-	&& rm -rf openshift-origin-client-tools-v1.3.2-ac1d579-linux-64bit \
+	&& mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin \
+	&& rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit \
 	&& mkdir /work \
 	&& chmod ugo+rwx /work \
 	&& rm oso.tar.gz \
+	&& curl -sLo /tmp/go.tar.gz  https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz \
+	&& cd /usr/local/bin && tar xvfz /tmp/go.tar.gz && rm /tmp/go.tar.gz \
 	&& cp /etc/passwd /etc/nss-passwd && cp /etc/group /etc/nss-group
 
 
