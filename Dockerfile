@@ -11,12 +11,19 @@ LABEL io.k8s.description="An application troubleshooting jumpbox" \
       io.k8s.display-name="Jump Box" \
       io.openshift.tags="jumpbox"
 
+ENV HOME /work
+ENV ENV=$HOME/.shinit;
+ENV USER jumper
+ENV LOGNAME jumper
+ENV PATH=$PATH:/usr/local/go/bin
+ENV GOPATH=$HOME/go
+
 RUN groupadd --gid 1001 jumper \
 	&& useradd --uid 1001 --gid 1001 --home /work jumper \
 	&& apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y --no-install-recommends ca-certificates curl dnsutils gettext git \
-		libnss-wrapper mysql-client nano python tar unzip vim-tiny \
+		htop jq libnss-wrapper mysql-client nano python silversearcher-ag tar unzip vim-tiny \
 	&& apt-get clean \
 	&& curl -s "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \
 	&& unzip awscli-bundle.zip \
@@ -31,9 +38,17 @@ RUN groupadd --gid 1001 jumper \
 	&& chmod ugo+rwx /work \
 	&& rm oso.tar.gz \
 	&& curl -sLo /tmp/go.tar.gz  https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz \
-	&& cd /usr/local/bin && tar xvfz /tmp/go.tar.gz && rm /tmp/go.tar.gz \
+	&& cd /usr/local && tar xvfz /tmp/go.tar.gz && rm /tmp/go.tar.gz \
 	&& cp /etc/passwd /etc/nss-passwd && cp /etc/group /etc/nss-group
 
+RUN git config --global alias.co checkout \
+	&& git config --global alias.br branch \
+	&& git config --global alias.ci commit \
+	&& git config --global alias.co checkout \
+	&& git config --global alias.st status \
+	&& git config --global alias.stat status
+
+RUN go get golang.org/x/tools/cmd/... && rm -rf ${GOPATH}/src/golang.org/x/tools
 
 ADD setenv.sh /work/.shinit
 COPY bashrc /work/.bashrc
@@ -47,9 +62,5 @@ COPY nss_wrapper.sh /etc/profile.d/nss_wrapper.sh
 
 # USER only works in Docker, not in Openshift
 USER 1001
-
-ENV HOME /work
-ENV ENV=$HOME/.shinit;
 ENV LD_PRELOAD libnss_wrapper.so
-ENV USER jumper
-ENV LOGNAME jumper
+

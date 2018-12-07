@@ -105,5 +105,10 @@ bind '"\t":menu-complete'
 
 # for Go
 export GOROOT=/usr/local/go
-export GOPATH=~/golang
+if [[ -d ~/golang ]]; then
+	export GOPATH=~/golang
+fi
+if [[ -d ~/go ]]; then
+	export GOPATH=~/go
+fi
 
